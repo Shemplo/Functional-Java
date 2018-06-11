@@ -162,7 +162,7 @@ Also here will be included main concepts of functional programming:
 
    }
    
-   // And examples of operations on Functor
+   // And examples of operations on Applicative
    
    import static ru.shemplo.fp.core.control.Control.*;
    import static ru.shemplo.fp.core.F.*;
@@ -173,8 +173,9 @@ Also here will be included main concepts of functional programming:
        // Instance from `pure` function 
        Applicative <F <Integer, Integer>> 
           pure = $$ (applicative.pure (), a -> a + 5); 
-       // Applying function on value in Applicative
+       // Applying function (not pure) on value in Applicative
        Applicative <Integer> int1 = $$ (ᐸⴲⴲᐳ (), applicative, pure);
+       // Applying function (pure) on value in Applicative
        Applicative <Integer> int2 = $$ (liftA (), a -> a + 3, int1);
        
        System.out.println (base);  // Applicative <Integer> 16
