@@ -37,7 +37,8 @@ Also here will be included main concepts of functional programming:
    Why it's important and useful?
    
    Modern IDE for Java can intercept such errors and underline code with error.
-   The programmer will be notified about error before the running code. It's our goal.
+   The programmer will be notified about error before the running code. 
+   And it increases the reliability of program.
    
 0. **Base functions**
 
@@ -45,7 +46,7 @@ Also here will be included main concepts of functional programming:
    Here is example of use of some of them:
    
    ```java
-   // This functions are declared in **fp.core.Base** class
+   // This functions are declared in fp.core.Base class
    
    // ($) or id function :: a -> a
    Integer number = F.$$ (Base.$ (), 0x54); 
@@ -53,7 +54,7 @@ Also here will be included main concepts of functional programming:
    
    // const :: a -> b -> a
    int [] array = F.$$ (Base.cst (), new int [4], "anyting"); 
-   // Result: array == [0, 0]
+   // Result: array == [0, 0, 0, 0]
    
    // flip :: (a -> b -> c) -> b -> a -> c
    String concat = $$ (Base.flip (), a -> b -> "" + a + b, "A", "B"); 
