@@ -57,8 +57,8 @@ Also here will be included main concepts of functional programming:
    // Result: array == [0, 0, 0, 0]
    
    // flip :: (a -> b -> c) -> b -> a -> c
-   String concat = $$ (Base.flip (), a -> b -> "" + a + b, "A", "B"); 
-   // Result: concat == "BA"
+   String concat = $$ (Base.flip (), a -> b -> "" + a + b, "A", 2); 
+   // Result: concat == "2A"
    ```
    
    _P.S._ unfortunately in Java there is no way to avoid `()` for receiving functions
@@ -107,7 +107,7 @@ Also here will be included main concepts of functional programming:
        Functor <Integer> base = new FunctorImpl <> (28);               // New instance of Functor
        Functor <String> str1  = $$ (ᐸ$ (), "New value", base);        // Replace value in Functor (1 option)
        Functor <String> str2  = $$ ($ᐳ (), base, "New value");        // Replace value in Functor (2 option)
-       Functor <int []> array = $$ (base.ᐸ$ᐳ (), i -> new int [i]);   // Applying function on value in Functor
+       Functor <int []> array = $$ (base.ᐸ$ᐳ (), int []::new);        // Applying function on value in Functor
        Functor <String> str3  = $$ (ᐸՖᐳ (), base, Objects::toString); // Applying function in given Functor
        
        System.out.println (base);  // Functor <Integer> 28
