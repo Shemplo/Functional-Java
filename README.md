@@ -121,5 +121,66 @@ Also here will be included main concepts of functional programming:
    For using in user's structures programmer needs only implement a `fmap`
    ([hakell](http://hackage.haskell.org/package/base-4.11.1.0/docs/Data-Functor.html#v:fmap))
    and `get` methods (`get` is not provided in Haskell but it as feature in Java).
+   
+0. **Applicative**
+
+   The next construction is _Applicative_ 
+   ([haskell](http://hackage.haskell.org/package/base-4.11.1.0/docs/Control-Applicative.html#v:liftA2)).
+   It has more complex structure and it's something between _Functor_ and _Monad_.
+   _Applicative_ extends _Functor_ and inherit all his methods + adds some more:
+   
+   ```java
+   // Applicative is interface which is placed in fp.core.control.Applicative
+   
+   // The simplest implementation can look as bellow
+   public class ApplicativeImpl <T> extends JFunctor <T> implements Applicative <T> {
+
+       public ApplicativeImpl (T value) {
+           super (value);
+       }
+       
+       @Override
+       public String toString () {
+           String type = get ().getClass ().getSimpleName ();
+           return "Applicative <" + type + "> " + get ();
+       }
+       
+       @Override
+       public <N> F <F <T, N>, Applicative <N>> fmap () {
+           return f -> new ApplicativeImpl <> (F.$$ (f, VALUE));
+       }
+       
+       @Override
+       public <B> F <B, ? extends Applicative <B>> pure () {
+           return b -> new ApplicativeImpl <> (b);
+       }
+       
+       @Override
+       public <B> F <Applicative <F <T, B>>, ? extends Applicative <B>> ᐸⴲᐳ () {
+           return ff -> F.$$ (pure (), ff.get ().apply (get()));
+       }
+
+   }
+   
+   // And examples of operations on Functor
+   
+   import static ru.shemplo.fp.core.control.Control.*;
+   import static ru.shemplo.fp.core.F.*;
+   
+   {
+       // New instance of Functor
+       Applicative <Integer> base = new ApplicativeImpl (16);            
+       // Instance from `pure` function 
+       Applicative <F <Integer, Integer>> 
+          pure = $$ (applicative.pure (), a -> a + 5); 
+       // Applying function on value in Applicative
+       Applicative <Integer> int1 = $$ (ᐸⴲⴲᐳ (), applicative, pure);
+       Applicative <Integer> int2 = $$ (liftA (), a -> a + 3, int1);
+       
+       System.out.println (base);  // Applicative <Integer> 16
+       System.out.println (int1);  // Applicative <Integer> 21
+       System.out.println (int2);  // Applicative <Integer> 24
+   }
+   ```
 
 #### _{- done as inspiration of Haskell -}_
