@@ -100,7 +100,7 @@ Also here will be included main concepts of functional programming:
    
    // And examples of operations on Functor
    
-   import static ru.shemplo.fp.core.control.Functor.*;
+   import static ru.shemplo.fp.core.control.Control.*;
    import static ru.shemplo.fp.core.F.*;
    
    {
