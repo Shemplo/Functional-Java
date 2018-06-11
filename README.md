@@ -64,4 +64,59 @@ Also here will be included main concepts of functional programming:
    _P.S._ unfortunately in Java there is no way to avoid `()` for receiving functions
    and programmer should just take it as is.
 
+0. **Functor**
+
+   In functional programming there is a construction that named _Functor_ 
+   ([haskell](http://hackage.haskell.org/package/base-4.11.1.0/docs/Data-Functor.html#t:Functor))
+   that generalizes the map function on lists and uniforms action over a parameterized type.
+   
+   ```java
+   // Functor is interface which is placed in fp.core.control.Functor
+   
+   // The simplest implementation can look as bellow
+   public class FunctorImpl <T> implements Functor <T> {
+
+    protected final T VALUE;
+    
+    public FunctorImpl (T value) {
+        this.VALUE = value;
+    }
+    
+    @Override
+    public String toString () {
+        String type = get ().getClass ().getSimpleName ();
+        return "Functor <" + type + "> " + get ();
+    }
+    
+    @Override
+    public T get () { return VALUE; }
+
+    @Override
+    public <N> F <F <T, N>, ? extends Functor <N>> fmap () {
+        return f -> new FunctorImpl <> (F.$$ (f, get ()));
+    }
+   
+   }
+   
+   dcds 
+   // And examples of operations on Functor
+   
+   import static ru.shemplo.fp.core.control.Functor.*;
+   import static ru.shemplo.fp.core.F.*;
+   
+   {
+       Functor <Integer> base = new FunctorImpl <> (28);             // New instance of Functor
+       Functor <String> str1  = $$ (ᐸ$ (), "New value", base);       // Replace value in Functor (1 option)
+       Functor <String> str2  = $$ ($ᐳ (), base, "New value");        // Replace value in Functor (2 option)
+       Functor <int []> array = $$ (base.ᐸ$ᐳ (), i -> new int [i]);   // Applying function on value in Functor
+       Functor <String> str3  = $$ (ᐸՖᐳ (), base, Objects::toString); // Applying function on value in given Functor
+       
+       System.out.println (base);  // Functor <Integer> 28
+       System.out.println (str1);  // Functor <String> New value
+       System.out.println (str2);  // Functor <String> New value
+       System.out.println (array); // Functor <int []> [I@...
+       System.out.println (str3);  // Functor <String> 28
+   }
+   ```
+
 #### _{- done as inspiration of Haskell -}_
