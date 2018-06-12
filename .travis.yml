@@ -1,0 +1,10 @@
+language: java
+
+script: 
+  - mvn clean test
+  
+after_success:
+  - echo "Build was successful. $TRAVIS_TEST_RESULT"
+  
+after_failure:
+  - echo "Build was failed"
