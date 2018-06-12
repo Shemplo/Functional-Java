@@ -6,10 +6,10 @@ public interface Functor <T> {
 
 	// Original fmap:: (a -> b) -> f a -> f b
 	// this :: f T -> (T -> N) -> Functor <N>
-	public <N> F <F <T, N>, ? extends Functor <N>> fmap ();
+	public <N, FN extends Functor <N>> F <F <T, N>, FN> fmap ();
 
 	// Synonym of fmap: (a -> b) -> f a -> f b
-	default public <N> F <F <T, N>, ? extends Functor <N>> ᐸ$ᐳ () {
+	default public <N, FN extends Functor <N>> F <F <T, N>, FN> ᐸ$ᐳ () {
 		return fmap ();
 	}
 	

@@ -14,7 +14,7 @@ public class Control {
 	// Original (<$):: a -> f b -> f a
 	static public <FA extends Functor <A>, FB extends Functor <B>, A, B> 
 			F <A, F <FB, FA>> ᐸ$ () {
-		return a -> fb -> $$ (fb.fmap (), $$ (Base.Ͼ (), a));
+		return a -> fb -> F.$$ (fb.fmap (), $$ (Base.Ͼ (), a));
 	}
 
 	// Original ($>):: Functor f => f a -> b -> f b
