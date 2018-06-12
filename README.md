@@ -13,10 +13,10 @@ gives opportunities to do more checks in Java (mostly for generic types).
 
 Also in functional programming is based on some mathematical theory
 _Theory of Types_ or _Category Theory_. 
-They has useful concepts that can decently help to avoid deep mistakes 
+They have useful concepts that can decently help to avoid deep mistakes 
 or they simply makes some problems easy. So, in this library are implemented
-some of them: **Functor**, **Applicative**, **Monad**, **Alternative**, etc;
-and their instances such as **Maybe**, **Either**, **[]**, **NonEmplty**, etc.
+a part of them: **Functor**, **Applicative**, **Monad**, **Alternative**, etc;
+and their instances such as **Maybe**, **Either**, **[]**, **NonEmpty**, etc.
 
 ## Building library
 
@@ -74,7 +74,7 @@ Use it as a dependency in Maven or Graddle is impossible now (will be added in f
    // Result: number == 0x54
    
    // const :: a -> b -> a
-   int [] array = F.$$ (Base.cst (), new int [4], "anyting"); 
+   int [] array = F.$$ (Base.cst (), new int [4], "anything"); 
    // Result: array == [0, 0, 0, 0]
    
    // flip :: (a -> b -> c) -> b -> a -> c
@@ -140,7 +140,7 @@ Use it as a dependency in Maven or Graddle is impossible now (will be added in f
    ```
    
    For using in user's structures programmer needs only implement a `fmap`
-   ([hakell](http://hackage.haskell.org/package/base-4.11.1.0/docs/Data-Functor.html#v:fmap))
+   ([haskell](http://hackage.haskell.org/package/base-4.11.1.0/docs/Data-Functor.html#v:fmap))
    and `get` methods (`get` is not provided in Haskell but it as feature in Java).
    
 0. **Applicative**

@@ -1,4 +1,5 @@
 import static org.junit.Assert.*;
+import static ru.shemplo.fp.data.Maybe.*;
 
 import java.util.Random;
 
@@ -12,6 +13,7 @@ import ru.shemplo.fp.core.control.Applicative;
 import ru.shemplo.fp.core.control.Control;
 import ru.shemplo.fp.core.control.Functor;
 import ru.shemplo.fp.core.control.Monad;
+import ru.shemplo.fp.data.Maybe;
 
 public class TestUnit {
 
@@ -279,6 +281,50 @@ public class TestUnit {
 			Monad <int []> result = F.$$ (Control.ap (), init, base);
 			Integer length = result.get ().length;
 			assertEquals (value, length);
+		}
+		
+	}
+	
+	@Nested
+	public class DataTestUnit {
+		
+		@Nested
+		public class MaybeTestUnit {
+			
+			private Maybe <Integer> base;
+			private Integer value;
+			
+			@BeforeEach
+			public void init () {
+				value = RAND.nextInt (10000);
+				base = F.$$ (just (), value);
+			}
+			
+			@Test
+			public void testInstantiate () {
+				Maybe <Integer> mb = nothing ();
+				assertTrue (mb instanceof Maybe <?>);
+				assertNull (mb.get ());
+				
+				mb = F.$$ (just (), value);
+				assertTrue (mb instanceof Maybe <?>);
+				assertEquals (value, mb.get ());
+			}
+			
+			@Test
+			public void testBind () {
+				F <Integer, Maybe <String>> str = a -> F.$$ (just (), "" + a);
+				Maybe <String> result = F.$$ (base.bind (), str);
+				assertTrue (result instanceof Just <?>);
+				
+				String expected = "" + value;
+				assertTrue (expected.equals (result.get ()));
+				
+				expected = "Just " + value;
+				assertTrue (expected.equals (result.toString ()));
+				
+			}
+			
 		}
 		
 	}

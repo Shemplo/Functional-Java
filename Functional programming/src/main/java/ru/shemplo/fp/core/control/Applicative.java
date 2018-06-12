@@ -8,6 +8,9 @@ public interface Applicative <T> extends Functor <T> {
 	public <B, AB extends Applicative <B>> F <B, AB> pure ();
 	
 	// Original (<*>) :: f (a -> b) -> f a -> f b
-	public <B, AB extends Applicative <B>> F <Applicative <F <T, B>>, AB> ᐸⴲᐳ ();
-	
+	// f <*> fa = fmap f fa
+	default public <B, AB extends Applicative <B>> F <Applicative <F <T, B>>, AB> ᐸⴲᐳ () {
+		return ff -> F.$$ (fmap (), ff.get (), get ());
+	}
+
 }
