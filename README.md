@@ -1,10 +1,12 @@
 # Functional library for Java
 
+[![Language](https://img.shields.io/badge/language-java-red.svg)](https://github.com/Shemplo/Functional-Java/blob/master/)
+
 [![Build Status](https://travis-ci.org/Shemplo/Functional-Java.svg?branch=master)](https://travis-ci.org/Shemplo/Functional-Java)
 
-[![GitHub license](https://img.shields.io/github/license/Shemplo/Functional-Java.svg)(https://github.com/Shemplo/Functional-Java/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/Shemplo/Functional-Java.svg)](https://github.com/Shemplo/Functional-Java/blob/master/LICENSE)
 
-[![Language](https://img.shields.io/badge/language-java-red.svg)](https://github.com/Shemplo/Functional-Java/blob/master/)
+[![GitHub stars](https://img.shields.io/github/stars/Shemplo/Functional-Java.svg)](https://github.com/Shemplo/Functional-Java/stargazers)
 
 
 Function programming is well of their types systems that allows 
