@@ -5,4 +5,4 @@
  * @author Shemp
  *
  */
-package data;
+package ru.shemplo.fp.data;
