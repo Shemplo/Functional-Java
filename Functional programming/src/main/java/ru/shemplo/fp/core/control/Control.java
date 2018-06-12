@@ -80,4 +80,49 @@ public class Control {
 		return f -> fa -> fb -> fc -> $$ (fc.ᐸⴲᐳ (), $$ (liftA2 (), f, fa, fb));
 	}
 	
+	// +-----------------+
+	// | Monad functions |
+	// +-----------------+
+	
+	// Original (>>) :: forall a b. m a -> m b -> m b
+	// m >> k = m >>= \_ -> k
+	public static <MA extends Monad <A>, MB extends Monad <B>, A, B>
+			F <MA, F <MB, MB>> ᐳᐳ () {
+		return ma -> mb -> $$ (ma.bind (), __ -> mb);
+	}
+	
+	// Original (=<<) :: Monad m => (a -> m b) -> m a -> m b
+	// f =<< x = x >>= f
+	public static <MA extends Monad <A>, MB extends Monad <B>, A, B>
+			F <F <A, MB>, F <MA, MB>> ᆖᐸᐸ () {
+		return f -> ma -> $$ (ma.bind (), f);
+	}
+	
+	// Original liftM :: (Monad m) => (a1 -> r) -> m a1 -> m r
+	// liftM f m1 = do { x1 <- m1; return (f x1) }
+	public static <MA extends Monad <A>, MB extends Monad <B>, A, B>
+			F <F <A, B>, F <MA, MB>> liftM () {
+		return f -> ma -> $$ (ma.ret (), $$ (f, ma.get ()));
+	}
+	
+	// Original liftM2 :: (Monad m) => (a1 -> a2 -> r) -> m a1 -> m a2 -> m r
+	public static <MA extends Monad <A>, MB extends Monad <B>, MC extends Monad <C>, A, B, C>
+			F <F <A, F <B, C>>, F <MA, F <MB, MC>>> liftM2 () {
+		return f -> ma -> mb -> $$ (liftM (), $$ (liftM (), f, ma).get (), mb);
+	}
+	
+	// Original liftM3 :: (Monad m) => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
+	public static <MA extends Monad <A>, MB extends Monad <B>, MC extends Monad <C>, 
+					MD extends Monad <D>, A, B, C, D>
+			F <F <A, F <B, F <C, D>>>, F <MA, F <MB, F <MC, MD>>>> liftM3 () {
+		return f -> ma -> mb -> mc -> $$ (liftM2 (), $$ (liftM (), f, ma).get (), mb, mc);
+	}
+	
+	// Original ap :: (Monad m) => m (a -> b) -> m a -> m b
+	// ap m1 m2 = do { x1 <- m1; x2 <- m2; return (x1 x2) }
+	public static <MA extends Monad <A>, MB extends Monad <B>, A, B>
+			F <Monad <F <A, B>>, F <MA, MB>> ap () {
+		return f -> ma -> $$ (liftM (), f.get (), ma);
+	}
+	
 }

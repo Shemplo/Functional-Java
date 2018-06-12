@@ -11,6 +11,7 @@ import ru.shemplo.fp.core.F;
 import ru.shemplo.fp.core.control.Applicative;
 import ru.shemplo.fp.core.control.Control;
 import ru.shemplo.fp.core.control.Functor;
+import ru.shemplo.fp.core.control.Monad;
 
 public class TestUnit {
 
@@ -52,6 +53,25 @@ public class TestUnit {
 		@Override
 		public <B, AB extends Applicative <B>> F <Applicative <F <T, B>>, AB> ᐸⴲᐳ () {
 			return ff -> F.$$ (pure (), ff.get ().apply (get()));
+		}
+		
+	}
+	
+	private static class Mo <T> extends Ap <T> implements Monad <T> {
+
+		public Mo (T value) {
+			super (value);
+		}
+		
+		@Override
+		@SuppressWarnings ({"unchecked", "rawtypes"})
+		public <B, AB extends Applicative <B>> F <B, AB> pure () {
+			return b -> (AB) new Mo (b);
+		}
+
+		@Override
+		public <B, MB extends Monad <B>> F <F <T, MB>, MB> bind () {
+			return f -> F.$$ (f, get ());
 		}
 		
 	}
@@ -202,6 +222,63 @@ public class TestUnit {
 			
 			Ap <String> second = F.$$ (Control.ⴲᐳ (), base, sap);
 			assertTrue (s.equals (second.get ()));
+		}
+		
+	}
+	
+	@Nested
+	public class MonadTestUnit {
+		
+		private Mo <Integer> base;
+		private Integer value;
+		
+		@BeforeEach
+		public void init () {
+			value = RAND.nextInt (1000);
+			base = new Mo <> (value);
+		}
+		
+		@Test
+		public void testBind () {
+			F <Integer, Monad <String>> str = a -> new Mo <> ("" + a);
+			Monad <String> updated = F.$$ (base.bind (), str);
+			String expected = "" + value;
+			assertTrue (expected.equals (updated.get ()));
+		}
+		
+		@Test
+		public void testReplace () {
+			Integer number = 1000 + RAND.nextInt (1000);
+			String expected = "string #" + number;
+			Mo <String> next = F.$$ (base.ret (), expected);
+			Mo <String> result = F.$$ (Control.ᐳᐳ (), base, next);
+			assertTrue (expected.equals (result.get ()));
+		}
+		
+		@Test
+		public void testLift () {
+			Monad <int []> result = F.$$ (Control.liftM (), int []::new, base);
+			Integer length = result.get ().length;
+			assertEquals (value, length);
+		}
+		
+		@Test
+		public void testLift2 () {
+			String s = "string #" + RAND.nextInt (100);
+			Monad <String> support = F.$$ (base.ret (), s);
+			F <Integer, F <String, String>> str = a -> b -> a + b;
+			
+			Monad <String> result = F.$$ (Control.liftM2 (), str, base, support);
+			String expected = value + s;
+			assertTrue (expected.equals (result.get ()));
+		}
+		
+		@Test
+		public void testAp () {
+			Monad <F <Integer, int []>> init  = F.$$ (base.ret (), int []::new);
+			Monad <int []> result = F.$$ (Control.ap (), init, base);
+			Integer length = result.get ().length;
+			assertEquals (value, length);
 		}
 		
 	}
