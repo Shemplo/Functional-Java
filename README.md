@@ -1,5 +1,7 @@
 # Functional library for Java
 
+[![Build Status](https://travis-ci.org/Shemplo/Functional-Java.svg?branch=master)](https://travis-ci.org/Shemplo/Functional-Java)
+
 Function programming is well of their types systems that allows 
 to do many checks in compile time. Java also has same mechanism 
 but in native use it's much weaker than analogues. This library
