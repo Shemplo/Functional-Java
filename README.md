@@ -170,7 +170,7 @@ Also here will be included main concepts of functional programming:
    import static ru.shemplo.fp.core.F.*;
    
    {
-       // New instance of Functor
+       // New instance of Applicative
        Applicative <Integer> base = new ApplicativeImpl (16);            
        // Instance from `pure` function 
        Applicative <F <Integer, Integer>> 
@@ -183,6 +183,63 @@ Also here will be included main concepts of functional programming:
        System.out.println (base);  // Applicative <Integer> 16
        System.out.println (int1);  // Applicative <Integer> 21
        System.out.println (int2);  // Applicative <Integer> 24
+   }
+   ```
+   
+0. **Monad**
+
+   The Monad class defines the basic operations over a monad, a concept from 
+   a branch of mathematics known as category theory. Monad is an abstract datatype of actions 
+   ([haskell](http://hackage.haskell.org/package/base-4.11.1.0/docs/Control-Monad.html)).
+   
+   ```java
+   // Monad is interface which is placed in fp.core.control.Monad
+   
+   // The simplest implementation can look as bellow
+   private static class MonadImpl <T> extends Ap <T> implements Monad <T> {
+
+       public MonadImpl (T value) {
+           super (value);
+       }
+       
+       @Override
+       public String toString () {
+           String type = get ().getClass ().getSimpleName ();
+           return "Monad <" + type + "> " + get ();
+       }
+       
+       @Override
+       @SuppressWarnings ({"unchecked", "rawtypes"})
+       public <B, AB extends Applicative <B>> F <B, AB> pure () {
+           return b -> (AB) new MonadImpl (b);
+       }
+       
+       @Override
+       public <B, MB extends Monad <B>> F <F <T, MB>, MB> bind () {
+           return f -> F.$$ (f, get ());
+       }
+        
+   }
+   
+   // And examples of operations on Applicative
+   
+   import static ru.shemplo.fp.core.control.Control.*;
+   import static ru.shemplo.fp.core.F.*;
+   
+   {
+       // New instance of Applicative
+       Monad <Integer> base = new Mo (44);
+       // Applying bing operation
+       Monad <String> str1  = $$ (base.bind (), a -> new Mo <> ("-" + a));
+       // Applying liftM function with pure function
+       Monad <int []> array = $$ (liftM (), int []::new, base);
+       // Applying ap function with function in Monad
+       Monad <String> str2  = $$ (ap (), $$ (base.ret (), Objects::toString), base);
+       
+       System.out.println (base);  // Monad <Integer> 44
+       System.out.println (str1);  // Monad <String> -44
+       System.out.println (str2);  // Monad <String> 44
+       System.out.println (array); // Monad <int []> [I@...
    }
    ```
 
