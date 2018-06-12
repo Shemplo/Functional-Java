@@ -27,9 +27,11 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.7.0</version>
         <configuration>
-          <includes>
-            <include>*</include>
-          </includes>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        
+          <testSource>src/test/java</testSource>
+          <source>src/main/java</source>
+          
           <source>${java.version}</source>
           <target>${java.version}</target>
         </configuration>
