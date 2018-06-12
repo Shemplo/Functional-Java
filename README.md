@@ -6,13 +6,28 @@
 [![GitHub stars](https://img.shields.io/github/stars/Shemplo/Functional-Java.svg)](https://github.com/Shemplo/Functional-Java/stargazers)
 
 
-Function programming is well of their types systems that allows 
+Functional programming is well of their types systems that allows 
 to do many checks in compile time. Java also has same mechanism 
 but in native use it's much weaker than analogues. This library
 gives opportunities to do more checks in Java (mostly for generic types).
 
-Also here will be included main concepts of functional programming:
-**Functors**, **Applicatives**, **Monads** and etc.
+Also in functional programming is based on some mathematical theory
+_Theory of Types_ or _Category Theory_. 
+They has useful concepts that can decently help to avoid deep mistakes 
+or they simply makes some problems easy. So, in this library are implemented
+some of them: **Functor**, **Applicative**, **Monad**, **Alternative**, etc;
+and their instances such as **Maybe**, **Either**, **[]**, **NonEmplty**, etc.
+
+## Building library
+
+Project can be built with Maven:
+
+> $ mvn clean packge
+
+Packed `.jar` file will be in `target` directory.
+In your project just add it to `classpath`.
+
+Use it as a dependency in Maven or Graddle is impossible now (will be added in future).
 
 ## Examples of use
 
