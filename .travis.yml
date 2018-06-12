@@ -3,10 +3,11 @@ sudo: false
 
 script: 
   - cd "Functional programming"
-  - mvn clean test
+  - mvn clean test cobertura:cobertura
   
 after_success:
   - echo "Build was successful. $TRAVIS_TEST_RESULT"
+  - bash <(curl -s https://codecov.io/bash)
   
 after_failure:
   - echo "Build was failed"

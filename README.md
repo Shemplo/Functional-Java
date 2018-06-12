@@ -2,6 +2,7 @@
 
 [![Language](https://img.shields.io/badge/language-java-red.svg)](https://github.com/Shemplo/Functional-Java/blob/master/)
 [![Build Status](https://travis-ci.org/Shemplo/Functional-Java.svg?branch=master)](https://travis-ci.org/Shemplo/Functional-Java)
+[![codecov](https://codecov.io/gh/Shemplo/Functional-Java/branch/master/graph/badge.svg)](https://codecov.io/gh/Shemplo/Functional-Java)
 [![GitHub license](https://img.shields.io/github/license/Shemplo/Functional-Java.svg)](https://github.com/Shemplo/Functional-Java/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/Shemplo/Functional-Java.svg)](https://github.com/Shemplo/Functional-Java/stargazers)
 
