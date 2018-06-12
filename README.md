@@ -2,6 +2,11 @@
 
 [![Build Status](https://travis-ci.org/Shemplo/Functional-Java.svg?branch=master)](https://travis-ci.org/Shemplo/Functional-Java)
 
+[![GitHub license](https://img.shields.io/github/license/Shemplo/Functional-Java.svg)(https://github.com/Shemplo/Functional-Java/blob/master/LICENSE)
+
+[![Language](https://img.shields.io/badge/language-java-red.svg)](https://github.com/Shemplo/Functional-Java/blob/master/)
+
+
 Function programming is well of their types systems that allows 
 to do many checks in compile time. Java also has same mechanism 
 but in native use it's much weaker than analogues. This library
@@ -227,7 +232,7 @@ Also here will be included main concepts of functional programming:
    import static ru.shemplo.fp.core.F.*;
    
    {
-       // New instance of Applicative
+       // New instance of Monad
        Monad <Integer> base = new Mo (44);
        // Applying bing operation
        Monad <String> str1  = $$ (base.bind (), a -> new Mo <> ("-" + a));
