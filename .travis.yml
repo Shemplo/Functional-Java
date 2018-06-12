@@ -1,7 +1,8 @@
 language: java
 
 script: 
-  - mvn clean test
+  - mvn clean
+  - mvn test
   
 after_success:
   - echo "Build was successful. $TRAVIS_TEST_RESULT"
