@@ -44,17 +44,21 @@ public abstract class Maybe <T> implements Monad <T> {
 	@Override
 	public T get () { return value; }
 	
-	public static boolean isNothing (Maybe <?> maybe) {
-		return maybe.isNothing ();
+	public Boolean isNothing_ () {
+		return $$ (isNothing (), this);
 	}
 	
-	public boolean isNothing () {
-		return isNull (value);
+	public static F <Maybe <?>, Boolean> isJust () {
+		return ma -> !isNull (ma.get ());
+	}
+	
+	public static F <Maybe <?>, Boolean> isNothing () {
+		return ma -> isNull (ma.get ());
 	}
 
 	@Override
 	public <N, FN extends Functor <N>> F <F <T, N>, FN> fmap () {
-		return f -> isNothing () 
+		return f -> isNothing_ ()
 					? $$ (ret (), null) 
 					: $$ (ret (), $$ (f, get ()));
 	}
@@ -72,9 +76,36 @@ public abstract class Maybe <T> implements Monad <T> {
 	
 	@Override
 	public <B, MB extends Monad <B>> F <F <T, MB>, MB> bind () {
-		return f -> isNothing () 
+		return f -> isNothing_ ()
 					? $$ (ret (), null) 
 					: $$ (f, get ());
+	}
+	
+	// Original maybe :: b -> (a -> b) -> Maybe a -> b
+	public static <MA extends Maybe <A>, MB extends Maybe <B>, A, B>
+			F <B, F <F <A, B>, F <MA, B>>> maybe () {
+		return b -> f -> ma -> 
+			ma.isNothing_ () ? b : $$ (f, ma.get ());
+	}
+	
+	// Original fromJust :: Maybe a -> a
+	public static <MA extends Maybe <A>, A>
+			F <MA, A> fromJust () {
+		return ma -> {
+			if (ma.isNothing_ ()) {
+				String message = "Method `fromJust` is requested on Nothing";
+				throw new IllegalStateException (message);
+			}
+			
+			return ma.get ();
+		};
+	}
+	
+	// Original fromMaybe :: a -> Maybe a -> a
+	public static <MA extends Maybe <A>, A>
+			F <A, F <MA, A>> fromMaybe () {
+		return a -> ma -> 
+			ma.isNothing_ () ? a : ma.get ();
 	}
 	
 	public static final class Just <T> extends Maybe <T> {
@@ -106,11 +137,11 @@ public abstract class Maybe <T> implements Monad <T> {
 		
 	}
 	
-	public static <R> F <R, Maybe <R>> just () {
+	public static <R> F <R, Just <R>> just () {
 		return f -> new Just <> (f);
 	}
 	
-	public static <R> Maybe <R> nothing () {
+	public static <R> Nothing <R> nothing () {
 		return new Nothing <> ();
 	}
 	

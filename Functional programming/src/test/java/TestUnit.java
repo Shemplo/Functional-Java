@@ -14,6 +14,8 @@ import ru.shemplo.fp.core.control.Control;
 import ru.shemplo.fp.core.control.Functor;
 import ru.shemplo.fp.core.control.Monad;
 import ru.shemplo.fp.data.Maybe;
+import ru.shemplo.fp.data.Maybe.Just;
+import ru.shemplo.fp.data.Maybe.Nothing;
 
 public class TestUnit {
 
@@ -302,19 +304,51 @@ public class TestUnit {
 			
 			@Test
 			public void testInstantiate () {
-				Maybe <Integer> mb = nothing ();
+				Maybe <?> mb = nothing ();
 				assertTrue (mb instanceof Maybe <?>);
 				assertNull (mb.get ());
 				
 				mb = F.$$ (just (), value);
+				assertEquals (true, F.$$ (isJust (), base));
 				assertTrue (mb instanceof Maybe <?>);
 				assertEquals (value, mb.get ());
+				
+				boolean wasException = false;
+				try {
+					F.$$ (just (), null);
+				} catch (Exception e) {
+					wasException = true;
+				}
+				assertTrue (wasException);
+			}
+			
+			@Test
+			public void testFMap () {
+				F <Integer, Cloneable> cloner = a -> null;
+				// testing fmap; (<*>) is synonym of fmap
+				Maybe <Cloneable> result = F.$$ (base.ᐸ$ᐳ (), cloner);
+				assertTrue (result instanceof Maybe <?>);
+				assertTrue (result.isNothing_ ());
+				assertNull (result.get ());
+				
+				Maybe <Cloneable> another = F.$$ (result.fmap (), Base.$ ());
+				assertTrue (another instanceof Maybe <?>);
+				assertTrue (another.isNothing_ ());
+				assertNull (another.get ());
+				
+				Integer number = 1000 + RAND.nextInt (1000);
+				F <Integer, Integer> addR = a -> a + number;
+				Maybe <Integer> updated = F.$$ (base.fmap (), addR);
+				assertTrue  (updated instanceof Maybe <?>);
+				assertFalse (updated.isNothing_ ());
+				Integer expected = value + number;
+				assertEquals (expected, updated.get ());
 			}
 			
 			@Test
 			public void testBind () {
-				F <Integer, Maybe <String>> str = a -> F.$$ (just (), "" + a);
-				Maybe <String> result = F.$$ (base.bind (), str);
+				Maybe <String> result = 
+					F.$$ (base.bind (), a -> F.$$ (just (), "" + a));
 				assertTrue (result instanceof Just <?>);
 				
 				String expected = "" + value;
@@ -323,6 +357,46 @@ public class TestUnit {
 				expected = "Just " + value;
 				assertTrue (expected.equals (result.toString ()));
 				
+				Nothing <Void> nothing = nothing (); expected = "Nothing";
+				result = F.$$ (nothing.bind (), a -> F.$$ (just (), "" + a));
+				assertTrue (expected.equals (result.toString ()));
+			}
+			
+			@Test
+			public void testMaybe () {
+				F <Integer, Boolean> odd = a -> (a & 1) == 1;
+				Boolean result = F.$$ (Maybe.maybe (), false, odd, base);
+				Boolean expected = value % 2 == 1;
+				assertEquals (expected, result);
+				
+				Nothing <Void> nothing = nothing (); expected = false;
+				F <Void, Boolean> fake = v -> !F.$$ (isJust (), nothing ());
+				result = F.$$ (Maybe.maybe (), false, fake, nothing);
+				assertEquals (expected, result);
+			}
+			
+			@Test
+			public void testFromJust () {
+				Integer result = F.$$ (fromJust (), base);
+				assertEquals (value, result);
+				
+				boolean wasException = false;
+				try {
+					F.$$ (fromJust (), nothing ());
+				} catch (Exception e) {
+					wasException = true;
+				}
+				assertTrue (wasException);
+			}
+			
+			@Test
+			public void testFromMaybe () {
+				Integer neg = -RAND.nextInt (10);
+				Integer result = F.$$ (fromMaybe (), neg, base);
+				assertEquals (value, result);
+				
+				result = F.$$ (fromMaybe (), neg, nothing ());
+				assertEquals (neg, result);
 			}
 			
 		}
