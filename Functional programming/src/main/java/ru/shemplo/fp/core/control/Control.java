@@ -11,6 +11,11 @@ public class Control {
 	// | Functor functions |
 	// +-------------------+
 	
+	public static <FA extends Functor <A>, FB extends Functor <B>, A, B>
+			F <F <A, B>, F <FA, FB>> fmap () {
+		return f -> fa -> F.$$ (fa.fmap (), f);
+	}
+	
 	// Original (<$):: a -> f b -> f a
 	static public <FA extends Functor <A>, FB extends Functor <B>, A, B> 
 			F <A, F <FB, FA>> ᐸ$ () {
@@ -38,6 +43,11 @@ public class Control {
 	// +-----------------------+
 	// | Applicative functions |
 	// +-----------------------+
+	
+	public static <AA extends Applicative <A>, AB extends Applicative <B>, A, B>
+			F <AA, F <B, AB>> pure () {
+		return fa -> b -> $$ (fa.pure (), b);
+	}
 	
 	// Original liftA2 :: (a -> b -> c) -> fa -> fb -> fc
 	// f fa fb = (fmap f fa) <*> fb
@@ -83,6 +93,11 @@ public class Control {
 	// +-----------------+
 	// | Monad functions |
 	// +-----------------+
+	
+	public static <MA extends Monad <A>, MB extends Monad <B>, A, B>
+			F <MA, F <F <A, MB>, MB>> bind () {
+		return ma -> f -> $$ (ma.bind (), f);
+	}
 	
 	// Original (>>) :: forall a b. m a -> m b -> m b
 	// m >> k = m >>= \_ -> k

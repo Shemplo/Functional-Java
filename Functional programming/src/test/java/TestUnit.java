@@ -1,4 +1,5 @@
 import static org.junit.Assert.*;
+import static ru.shemplo.fp.data.Either.*;
 import static ru.shemplo.fp.data.Maybe.*;
 
 import java.util.Random;
@@ -13,6 +14,7 @@ import ru.shemplo.fp.core.control.Applicative;
 import ru.shemplo.fp.core.control.Control;
 import ru.shemplo.fp.core.control.Functor;
 import ru.shemplo.fp.core.control.Monad;
+import ru.shemplo.fp.data.Either;
 import ru.shemplo.fp.data.Maybe;
 import ru.shemplo.fp.data.Maybe.Just;
 import ru.shemplo.fp.data.Maybe.Nothing;
@@ -326,7 +328,8 @@ public class TestUnit {
 			public void testFMap () {
 				F <Integer, Cloneable> cloner = a -> null;
 				// testing fmap; (<*>) is synonym of fmap
-				Maybe <Cloneable> result = F.$$ (base.ᐸ$ᐳ (), cloner);
+				//Maybe <Cloneable> result = F.$$ (base.ᐸ$ᐳ (), cloner);
+				Maybe <Cloneable> result = F.$$ (base.fmap (), cloner);
 				assertTrue (result instanceof Maybe <?>);
 				assertTrue (result.isNothing_ ());
 				assertNull (result.get ());
@@ -397,6 +400,79 @@ public class TestUnit {
 				
 				result = F.$$ (fromMaybe (), neg, nothing ());
 				assertEquals (neg, result);
+			}
+			
+		}
+		
+		@Nested
+		public class EitherTestUnit {
+			
+			private Integer value;
+			
+			@BeforeEach
+			public void init () {
+				value = RAND.nextInt (10000);
+			}
+			
+			@Test
+			public void testInstantiate () {
+				Either <Integer, ?> left = F.$$ (left (), value);
+				assertTrue  (left instanceof Either <?, ?>);
+				assertFalse (left.isRight_ ());
+				assertTrue  (left.isLeft_ ());
+				assertNull  (left.get ());
+				
+				Either <?, Integer> right = F.$$ (right (), value);
+				assertTrue   (right instanceof Either <?, ?>);
+				assertTrue   (right.isRight_ ());
+				assertFalse  (right.isLeft_ ());
+				assertEquals (value, right.get ());
+			}
+			
+			@Test
+			public void testFMap () {
+				Integer number = 1000 + RAND.nextInt (1000);
+				F <Integer, Integer> addR = a -> a + number;
+				
+				Either <Integer, Integer> left = F.$$ (left (), value);
+				left = F.$$ (left.fmap (), addR);
+				assertTrue  (left instanceof Either <?, ?>);
+				assertFalse (left.isRight_ ());
+				assertTrue  (left.isLeft_ ());
+				assertNull  (left.get ());
+				
+				// Simple check that it is at least compiled ///////
+				F.$$ (Control.fmap (), addR, F.$$ (left (), value));
+				////////////////////////////////////////////////////
+				
+				Integer expected = value + number;
+				Either <?, Integer> right = F.$$ (right (), value);
+				right = F.$$ (Control.fmap (), addR, right);
+				assertTrue   (right instanceof Either <?, ?>);
+				assertTrue   (right.isRight_ ());
+				assertFalse  (right.isLeft_ ());
+				assertEquals (expected, right.get ());
+			}
+			
+			@Test
+			public void testBind () {
+				Either <Integer, Integer> left = F.$$ (left (), value);
+				left = F.$$ (Control.bind (), left, a -> F.$$ (right (), -1));
+				assertTrue  (left instanceof Either <?, ?>);
+				assertFalse (left.isRight_ ());
+				assertTrue  (left.isLeft_ ());
+				assertNull  (left.get ());
+				
+				Integer number = 1000 + RAND.nextInt (1000);
+				Integer expected = value + number;
+				
+				Either <?, Integer> right = F.$$ (right (), value);
+				right = F.$$ (Control.bind (), right, 
+								a -> F.$$ (right (), a + number));
+				assertTrue   (right instanceof Either <?, ?>);
+				assertTrue   (right.isRight_ ());
+				assertFalse  (right.isLeft_ ());
+				assertEquals (expected, right.get ());
 			}
 			
 		}
