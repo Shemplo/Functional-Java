@@ -427,6 +427,20 @@ public class TestUnit {
 				assertTrue   (right.isRight_ ());
 				assertFalse  (right.isLeft_ ());
 				assertEquals (value, right.get ());
+				
+				Either <?, Integer> pure = F.$$ (Control.pure (), left, value);
+				assertTrue   (pure instanceof Either <?, ?>);
+				assertTrue   (pure.isRight_ ());
+				assertFalse  (pure.isLeft_ ());
+				assertEquals (value, pure.get ());
+				
+				boolean wasException = false;
+				try {
+					F.$$ (Control.pure (), right, (String) null);
+				} catch (Exception e) {
+					wasException = true;
+				}
+				assertTrue (wasException);
 			}
 			
 			@Test
@@ -473,6 +487,50 @@ public class TestUnit {
 				assertTrue   (right.isRight_ ());
 				assertFalse  (right.isLeft_ ());
 				assertEquals (expected, right.get ());
+			}
+			
+			@Test
+			public void testEither () {
+				Integer number = 1000 + RAND.nextInt (1000);
+				F <Integer, Integer> addR = a -> a + number;
+				String message = "Error #" + value; 
+				
+				Either <String, Integer> left = F.$$ (left (), message);
+				Integer result = F.$$ (either (), s -> s.length (), addR, left);
+				assertTrue (message.length () == result);
+				
+				Either <String, Integer> right = F.$$ (right (), value);
+				result = F.$$ (either (), s -> s.length (), addR, right);
+				assertTrue (value + number == result);
+			}
+			
+			@Test
+			public void testFromLeft () {
+				Integer number = 1000 + RAND.nextInt (1000);
+				String dummy = "Dummy string " + number;
+				String message = "Error #" + value; 
+				
+				Either <String, Integer> left = F.$$ (left (), message);
+				String result = F.$$ (fromLeft (), dummy, left);
+				assertEquals (result, message);
+				
+				Either <String, Integer> right = F.$$ (right (), value);
+				result = F.$$ (fromLeft (), dummy, right);
+				assertEquals (result, dummy);
+			}
+			
+			@Test
+			public void testFromRight () {
+				Integer number = 1000 + RAND.nextInt (1000);
+				String message = "Error #" + value; 
+				
+				Either <String, Integer> left = F.$$ (left (), message);
+				Integer result = F.$$ (fromRight (), number, left);
+				assertEquals (result, number);
+				
+				Either <String, Integer> right = F.$$ (right (), value);
+				result = F.$$ (fromRight (), number, right);
+				assertEquals (result, value);
 			}
 			
 		}

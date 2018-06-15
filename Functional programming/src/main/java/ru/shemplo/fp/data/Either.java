@@ -10,10 +10,6 @@ import ru.shemplo.fp.core.control.Monad;
 
 public abstract class Either <L, R> implements Monad <R> {
 	
-	{
-		$ⵑ$ (a -> isNull (a), "");
-	}
-	
 	protected final R RIGHT;
 	protected final L LEFT;
 	
@@ -92,6 +88,25 @@ public abstract class Either <L, R> implements Monad <R> {
 				return $$ (f, get ());
 			}
 		};
+	}
+	
+	// Original either :: (a -> c) -> (b -> c) -> Either a b -> c
+	public static <E extends Either <A, B>, A, B, C>
+			F <F <A, C>, F <F <B, C>, F <E, C>>> either () {
+		return fa -> fb -> e -> 
+			e.isLeft_ () ? $$ (fa, e.LEFT) : $$ (fb, e.RIGHT);
+	}
+	
+	// Original fromLeft :: a -> Either a b -> a
+	public static <E extends Either <A, B>, A, B>
+			F <A, F <E, A>> fromLeft () {
+		return a -> e -> (e.isLeft_ () ? e.LEFT : a);
+	}
+	
+	// Original fromRight :: b -> Either a b -> b
+	public static <E extends Either <A, B>, A, B>
+			F <B, F <E, B>> fromRight () {
+		return b -> e -> (e.isRight_ () ? e.RIGHT : b);
 	}
 	
 	public static <L, R> F <L, Left <L, R>> left () {
